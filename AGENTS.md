@@ -58,6 +58,20 @@ All commands are documented in `README.md`. Key ones:
 8. **`.env` files are pre-created from `.env.example`** — Every repo has its `.env` (or `.env.local` for bausch-lomb) pre-populated from the example. Replace placeholder values with real credentials as needed.
 9. **Dependencies are pre-installed** — All `node_modules` are pre-installed in the snapshot. If you need to refresh, use `bun install` for backends and `pnpm install` for frontends (or `npm install` for `index-chat-ui-embed` sub-apps).
 
+### Local infrastructure (Docker)
+
+Postgres, Redis, and Qdrant run as Docker containers on the VM. The update script starts Docker and the containers automatically.
+
+| Container | Port | Credentials | Databases |
+|-----------|------|-------------|-----------|
+| `dev-postgres` | 5432 | `postgres:postgres` | `capabilities_ai_db`, `core_engine_db`, `doc_manager_db` |
+| `dev-redis` | 6379 | none | — |
+| `dev-qdrant` | 6333 | none | — |
+
+Data is stored in Docker volumes (`pgdata`, `redisdata`, `qdrantdata`) and persists across container restarts.
+
+To manually manage: `sudo docker start/stop/restart dev-postgres dev-redis dev-qdrant`
+
 ### Repo layout and package managers
 
 | Repo | Package Manager | Dev Port | Notes |
@@ -70,7 +84,20 @@ All commands are documented in `README.md`. Key ones:
 | `core-engine` (root) | bun | 3002 | Backend; needs Postgres |
 | `core-engine/ce-frontend` | pnpm | Vite default | Admin/workbench UI |
 | `bausch-lomb` | pnpm | 7654 | Chat embed; uses `.env.local` |
-| `rx-analytics` | pnpm | Vite default | Ant Design dashboard |
+| `rx-analytics` | pnpm | 16588 | Ant Design dashboard |
 | `index-chat-ui-embed/*` | npm | Vite default | 9 independent Vite apps |
 | `rx-crm/backend` | bun | 3003 | CRM API |
 | `rx-crm/frontend` | pnpm | 18656 | CRM UI |
+
+### Starting backends
+
+```bash
+cd /home/ubuntu/repos/IndexHealth/capabilities-ai && bun run dev
+cd /home/ubuntu/repos/IndexHealth/core-engine && bun run dev
+cd /home/ubuntu/repos/IndexHealth/document-manager/backend && bun run dev
+cd /home/ubuntu/repos/TheRxAssistant/rx-crm/backend && bun run dev
+```
+
+### Core-engine strict env validation
+
+`core-engine` uses Zod and **exits on boot** if required vars are missing or blank. See `src/services/common/svc-env-schema.ts` for the full schema. The other backends read env lazily and only fail when a feature is actually used.
