@@ -1,0 +1,46 @@
+{
+  "services": {
+    "capabilities-ai": {
+      "repo": "IndexHealth/capabilities-ai",
+      "package_root": "",
+      "port": 3001,
+      "health_url": "http://localhost:3001/",
+      "dev_command": "bun run dev",
+      "env_files": [".env"]
+    },
+    "core-engine": {
+      "repo": "IndexHealth/core-engine",
+      "package_root": "",
+      "port": 3002,
+      "health_url": "http://localhost:3002/api-status/SudqSEgcCgpGVQ0aawtlR6PLB96sQyJLnGoELtQS6rVukgH116",
+      "dev_command": "bun run dev",
+      "env_files": [".env"]
+    },
+    "rx-analytics": {
+      "repo": "TheRxAssistant/rx-analytics",
+      "package_root": "",
+      "port": 16588,
+      "health_url": "http://localhost:16588/",
+      "dev_command": "bun run dev",
+      "env_files": [".env.local"]
+    }
+  },
+  "cross_links": {
+    "capabilities-ai": {
+      "CORE_ENGINE_URL": "http://localhost:3002",
+      "CAPABILITIES_EXTERNAL_URL": "http://localhost:3001"
+    },
+    "core-engine": {
+      "CAPABILITIES_AI": "http://localhost:3001",
+      "CAPABILITIES_EXTERNAL_URL": "http://localhost:3001",
+      "CORE_ENGINE_SERVER_URL": "http://localhost:3002"
+    },
+    "rx-analytics": {
+      "VITE_BASE_URL_CAPABILITITES": "http://localhost:3001"
+    }
+  },
+  "shared": {
+    "REDIS_HOST": "localhost",
+    "REDIS_PORT": "6379"
+  }
+}

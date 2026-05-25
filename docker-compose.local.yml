@@ -1,0 +1,15 @@
+# Local infrastructure for the three-service stack (capabilities, core-engine, rx-analytics).
+# Postgres is expected via stage connection strings in .env.stack — see docs/local-stack.md.
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: local-stack-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - local_stack_redis_data:/data
+    command: ["redis-server", "--appendonly", "yes"]
+
+volumes:
+  local_stack_redis_data:

@@ -121,6 +121,19 @@ Print package root paths for install automation:
 dev-repos package-roots
 ```
 
+## Local three-service stack
+
+Run **capabilities-ai** (3001), **core-engine** (3002), and **rx-analytics** (16588) wired to each other on localhost:
+
+```bash
+cp .env.stack.example .env.stack   # add stage DB URLs + API keys
+export DEV_REPOS_ROOT=/workspace DEV_REPOS_CHECKOUT_ROOT=/workspace/repos
+local-dev setup
+tmux attach -t local-stack
+```
+
+See [docs/local-stack.md](docs/local-stack.md) for ports, env variables, and troubleshooting.
+
 ## Benefits
 
 - One Cursor environment can clone and manage all configured repos.

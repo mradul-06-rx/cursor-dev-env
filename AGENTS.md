@@ -34,6 +34,12 @@ DEV_REPOS_WORKTREES_ROOT=/workspace/worktrees  # Worktree location
 DEV_REPOS_GIT_PROTOCOL=ssh         # ssh (default) or https
 ```
 
+### Local stack (capabilities + core-engine + rx-analytics)
+
+- Copy `.env.stack.example` → `.env.stack` with stage DB URLs and API keys.
+- `local-dev setup` clones (if needed), writes cross-wired `.env` files, installs deps, starts Redis, and launches all three servers in tmux session `local-stack`.
+- Details: `docs/local-stack.md`.
+
 ### Running the tooling
 
 All commands are documented in `README.md`. Key ones:
