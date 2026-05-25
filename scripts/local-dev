@@ -1,0 +1,49 @@
+#!/usr/bin/env python3
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+import local_dev_ops as ops  # noqa: E402
+
+
+def main() -> None:
+    """CLI for local three-service development."""
+    if len(sys.argv) < 2:
+        print(
+            "Usage: local-dev <command> [service...]\n"
+            "Commands: status, clone, env, install, infra-up, infra-down, start, setup"
+        )
+        raise SystemExit(2)
+
+    command = sys.argv[1]
+    selectors = sys.argv[2:] or None
+
+    actions = {
+        "status": lambda: ops.print_status(),
+        "clone": lambda: ops.ensure_repos(selectors),
+        "env": lambda: ops.sync_env_files(),
+        "install": lambda: ops.install_deps(selectors),
+        "infra-up": lambda: ops.infra_up(),
+        "infra-down": lambda: ops.infra_down(),
+        "start": lambda: ops.start_servers(selectors),
+        "setup": lambda: _setup(selectors),
+    }
+
+    if command not in actions:
+        print(f"Unknown command: {command}", file=sys.stderr)
+        raise SystemExit(2)
+    actions[command]()
+
+
+def _setup(selectors: list[str] | None) -> None:
+    """Clone repos, sync env, install deps, start Redis, and launch servers."""
+    ops.ensure_repos(selectors)
+    ops.sync_env_files()
+    ops.install_deps(selectors)
+    ops.infra_up()
+    ops.start_servers(selectors)
+
+
+if __name__ == "__main__":
+    main()

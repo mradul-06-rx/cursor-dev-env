@@ -21,6 +21,6 @@ WORKDIR /opt/cursor-dev-environment
 COPY config ./config
 COPY scripts ./scripts
 
-RUN chmod +x ./scripts/dev-repos     && ln -s /opt/cursor-dev-environment/scripts/dev-repos /usr/local/bin/dev-repos     && git lfs install --system
+RUN chmod +x ./scripts/dev-repos ./scripts/local-dev     && ln -s /opt/cursor-dev-environment/scripts/dev-repos /usr/local/bin/dev-repos     && ln -s /opt/cursor-dev-environment/scripts/local-dev /usr/local/bin/local-dev     && git lfs install --system
 
 CMD ["bash"]

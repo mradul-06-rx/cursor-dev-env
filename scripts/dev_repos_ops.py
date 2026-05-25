@@ -43,6 +43,14 @@ def load_records(selectors: list[str]) -> list[dict]:
     return records
 
 
+def git_env() -> dict[str, str]:
+    """Builds a subprocess env that disables Cursor's HTTPS git URL rewrite."""
+    env = os.environ.copy()
+    env["GIT_CONFIG_GLOBAL"] = "/dev/null"
+    env["GIT_CONFIG_SYSTEM"] = "/dev/null"
+    return env
+
+
 def run(command: list[str], cwd: Path | None = None, capture: bool = False) -> str:
     """Runs a command with inherited output unless callers need parsed stdout."""
     result = subprocess.run(
@@ -52,6 +60,7 @@ def run(command: list[str], cwd: Path | None = None, capture: bool = False) -> s
         text=True,
         stdout=subprocess.PIPE if capture else None,
         stderr=subprocess.PIPE if capture else None,
+        env=git_env() if command and command[0] == "git" else None,
     )
     return result.stdout.strip() if capture else ""
 
@@ -64,6 +73,7 @@ def git(path: Path, *args: str, capture: bool = False, check: bool = True) -> st
         text=True,
         stdout=subprocess.PIPE if capture else None,
         stderr=subprocess.PIPE if capture else None,
+        env=git_env(),
     )
     if check and result.returncode != 0:
         if capture and result.stderr:
