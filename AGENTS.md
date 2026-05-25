@@ -1,6 +1,6 @@
 # Cursor Dev Environment - Agent Instructions
 
-This is a **multi-repo dev environment orchestrator**, not an application codebase. It manages cloning and coordinating 8 product repositories across two GitHub organizations (`index_health`, `therx_assistant`).
+This is a **multi-repo dev environment orchestrator**, not an application codebase. It manages cloning and coordinating 8 product repositories across two GitHub organizations (`IndexHealth`, `TheRxAssistant`).
 
 ## Cursor Cloud specific instructions
 
@@ -21,8 +21,9 @@ The `dev-repos` CLI (`scripts/dev-repos`) manages clone/status/fetch/update/bran
 ### Authentication
 
 - The `GITHUB_SSH_PRIVATE_KEY` secret must contain a valid **private** key (starts with `-----BEGIN OPENSSH PRIVATE KEY-----`), not a public key.
-- If SSH is unavailable, set `DEV_REPOS_GIT_PROTOCOL=https` and ensure `gh auth` is configured (the update script handles this).
-- The gh CLI token provided by the Cursor platform may not have access to the `index_health` and `therx_assistant` orgs. The SSH key is the recommended auth method.
+- If SSH is unavailable, set `DEV_REPOS_GIT_PROTOCOL=https` and ensure the gh token has access to both orgs.
+- The Cursor platform's default `gh` token does NOT have access to the private `IndexHealth` and `TheRxAssistant` org repos. SSH is the recommended auth method.
+- GitHub org names are `IndexHealth` and `TheRxAssistant` (PascalCase, not snake_case).
 
 ### Key environment variables
 
@@ -49,4 +50,4 @@ All commands are documented in `README.md`. Key ones:
 2. **Repos dir is gitignored** — `/workspace/repos/` and `/workspace/worktrees/` are created at runtime by `dev-repos clone`.
 3. **Python module path** — `dev-repos` imports `dev_repos_ops` from the same `scripts/` directory. The symlink at `/usr/local/bin/dev-repos` makes this work because Python resolves the real path.
 4. **Bun install location** — Bun installs to `~/.bun/bin/bun`; ensure PATH includes `$HOME/.bun/bin`.
-5. **Product repos must exist** — The configured repos under `index_health` and `therx_assistant` orgs must exist on GitHub and be accessible with the configured auth before `dev-repos clone` will succeed.
+5. **Product repos are private** — The configured repos under `IndexHealth` and `TheRxAssistant` orgs are private and require a valid SSH private key in the `GITHUB_SSH_PRIVATE_KEY` secret.
