@@ -3,49 +3,49 @@
   "repos": [
     {
       "name": "capabilities-ai",
-      "org": "index_health",
+      "org": "IndexHealth",
       "tier": "core",
       "package_roots": ["", "crm"]
     },
     {
       "name": "document-manager",
-      "org": "index_health",
+      "org": "IndexHealth",
       "tier": "core",
       "package_roots": ["backend", "frontend"]
     },
     {
       "name": "index-member-portal",
-      "org": "index_health",
+      "org": "IndexHealth",
       "tier": "core",
       "package_roots": [""]
     },
     {
       "name": "core-engine",
-      "org": "index_health",
+      "org": "IndexHealth",
       "tier": "core",
       "package_roots": ["", "ce-frontend"]
     },
     {
       "name": "bausch-lomb",
-      "org": "therx_assistant",
+      "org": "TheRxAssistant",
       "tier": "core",
       "package_roots": [""]
     },
     {
       "name": "rx-analytics",
-      "org": "therx_assistant",
+      "org": "TheRxAssistant",
       "tier": "core",
       "package_roots": [""]
     },
     {
       "name": "index-chat-ui-embed",
-      "org": "index_health",
+      "org": "IndexHealth",
       "tier": "core",
       "package_roots": [""]
     },
     {
       "name": "rx-crm",
-      "org": "therx_assistant",
+      "org": "TheRxAssistant",
       "tier": "core",
       "package_roots": ["backend", "frontend"]
     }
