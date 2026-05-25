@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Clones the configured repos during environment setup, then prints their state.
+dev-repos clone "$@"
+dev-repos status "$@"

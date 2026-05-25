@@ -1,0 +1,66 @@
+#!/usr/bin/env python3
+import sys
+
+import dev_repos_ops as ops
+
+
+def usage() -> None:
+    """Prints command help so fresh dev containers are self-documenting."""
+    print(
+        """Usage: dev-repos <command> [args]
+
+Commands:
+  list [repo...]                    List configured repositories.
+  clone [repo...]                   Clone missing repositories.
+  status [repo...]                  Show branch and dirty state.
+  fetch [repo...]                   Fetch origin for cloned repositories.
+  update [repo...]                  Fetch and fast-forward current branches.
+  sync-default [repo...]            Checkout and fast-forward default branches.
+  branch-create <branch> [repo...]  Create or checkout a branch in selected repos.
+  worktree-add <branch> [repo...]   Add worktrees under DEV_REPOS_WORKTREES_ROOT.
+  worktree-remove <branch> [repo...] Remove matching worktrees.
+  package-roots [repo...]           Print configured package root paths.
+
+Repo selectors can be either repo name or org/name. With no selectors, all repos
+from config/repos.json are used.
+"""
+    )
+
+
+def main() -> None:
+    """Dispatches commands while keeping branch arguments separate from selectors."""
+    command = sys.argv[1] if len(sys.argv) > 1 else "help"
+    args = sys.argv[2:]
+    if command in {"help", "--help", "-h"}:
+        usage()
+        return
+
+    branch_commands = {"branch-create", "worktree-add", "worktree-remove"}
+    branch = ""
+    if command in branch_commands:
+        if not args:
+            raise SystemExit("A branch name is required.")
+        branch, args = args[0], args[1:]
+
+    records = ops.load_records(args)
+    actions = {
+        "list": lambda repo: ops.list_repo(repo),
+        "clone": lambda repo: ops.clone_repo(repo),
+        "status": lambda repo: ops.status_repo(repo),
+        "fetch": lambda repo: ops.fetch_repo(repo),
+        "update": lambda repo: ops.update_repo(repo),
+        "sync-default": lambda repo: ops.sync_default_repo(repo),
+        "branch-create": lambda repo: ops.branch_create_repo(repo, branch),
+        "worktree-add": lambda repo: ops.worktree_add_repo(repo, branch),
+        "worktree-remove": lambda repo: ops.worktree_remove_repo(repo, branch),
+        "package-roots": lambda repo: ops.package_roots_repo(repo),
+    }
+    if command not in actions:
+        usage()
+        raise SystemExit(f"Unknown command: {command}")
+    for repo in records:
+        actions[command](repo)
+
+
+if __name__ == "__main__":
+    main()
