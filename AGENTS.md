@@ -51,3 +51,5 @@ All commands are documented in `README.md`. Key ones:
 3. **Python module path** — `dev-repos` imports `dev_repos_ops` from the same `scripts/` directory. The symlink at `/usr/local/bin/dev-repos` makes this work because Python resolves the real path.
 4. **Bun install location** — Bun installs to `~/.bun/bin/bun`; ensure PATH includes `$HOME/.bun/bin`.
 5. **Product repos are private** — The configured repos under `IndexHealth` and `TheRxAssistant` orgs are private and require a valid SSH private key in the `GITHUB_SSH_PRIVATE_KEY` secret.
+6. **`DEV_REPOS_ROOT` defaults to `~/workspace`** — If this env var is unset, `dev_repos_ops.py` resolves it to `Path.home() / "workspace"` (e.g. `/home/ubuntu/workspace`), which differs from the Dockerfile's `/workspace`. Set `DEV_REPOS_ROOT=/workspace` explicitly or ensure the workspace path matches.
+7. **HTTPS mode needs `gh auth setup-git`** — When using `DEV_REPOS_GIT_PROTOCOL=https`, run `gh auth setup-git` first so git uses the `gh` credential helper. The default Cursor `gh` token still lacks private-org access; a custom token or SSH is required.
